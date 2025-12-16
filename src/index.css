@@ -2,6 +2,16 @@
 @import "tailwindcss";
 @plugin "daisyui";
 
+@plugin "daisyui/theme" {
+  name: "luxury";
+  default: true;
+  /* --color-primary: blue;
+  --color-secondary: teal; */
+}
+@plugin "daisyui/theme" {
+  name: "cupcake"; 
+}
+
 
 body{
    font-family: "Urbanist", sans-serif;
