@@ -10,10 +10,10 @@ const Logo = ({ className = "" }) => {
       whileHover="hover"
       animate="rest"
     >
-      <span className="text-blue-700 dark:text-neutral-100">City</span>
+      <span className="text-base-700 dark:text-neutral-100">City</span>
 
       <motion.span
-        className="ml-1 text-teal-600 dark:text-neutral-100"
+        className="ml-1 text-green-500 dark:text-neutral-100"
         variants={{
           rest: { opacity: 1, x: 0 },
           hover: { opacity: 0.8, x: 2 },
