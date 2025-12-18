@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 
 const Logo = ({ className = "" }) => {
   return (
-    <motion.a
+    <motion
       href="/"
       className={`relative z-10 inline-flex items-center font-extrabold tracking-tight no-underline ${className}`}
       initial="rest"
@@ -22,7 +22,7 @@ const Logo = ({ className = "" }) => {
       >
         Resolved
       </motion.span>
-    </motion.a>
+    </motion>
   );
 };
 export default Logo;

@@ -13,6 +13,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 
+// Just the single, unique list of 6 features
 const features = [
   {
     id: 1,
@@ -58,6 +59,7 @@ const features = [
   },
 ];
 
+
 const Feature = () => {
   return (
     <section className="py-20 bg-base-200 overflow-hidden">
@@ -75,15 +77,11 @@ const Feature = () => {
         grabCursor={true}
         centeredSlides={true}
         slidesPerView={"auto"}
-        initialSlide={1}
-        loop={true}
-        loopedSlides={features.length}
-        speed={800}
-        autoplay={{
-          delay: 3000,
-          disableOnInteraction: false,
-          pauseOnMouseEnter: true,
-        }}
+        initialSlide={3}
+        loop={false}
+        loopedSlides={6} 
+        speed={1000}
+       
         coverflowEffect={{
           rotate: 0,
           stretch: 0,

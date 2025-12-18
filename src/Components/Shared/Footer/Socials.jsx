@@ -7,7 +7,7 @@ const Socials = () => {
       <ul className="example-1 bg-neutral">
         <li className="icon-content">
           <a
-            href="https://www.spotify.com/"
+            href="https://www.facebook.com/"
             aria-label="Spotify"
             data-social="spotify"
             className="link bg-neutral text-neutral-content hover:text-primary"
@@ -20,7 +20,7 @@ const Socials = () => {
         </li>
         <li className="icon-content">
           <a
-            href="https://www.pinterest.com/"
+            href="https://www.instagram.com/"
             aria-label="Pinterest"
             data-social="pinterest"
             className="link bg-neutral text-neutral-content hover:text-secondary"
@@ -33,7 +33,7 @@ const Socials = () => {
         </li>
         <li className="icon-content">
           <a
-            href="https://dribbble.com/"
+            href="https://twitter.com/"
             aria-label="Dribbble"
             data-social="dribbble"
             className="link bg-neutral text-neutral-content hover:text-accent"
@@ -46,7 +46,7 @@ const Socials = () => {
         </li>
         <li className="icon-content">
           <a
-            href="https://telegram.org/"
+            href="https://gmail.com/"
             aria-label="Telegram"
             data-social="telegram"
             className="link bg-neutral text-neutral-content hover:text-info"

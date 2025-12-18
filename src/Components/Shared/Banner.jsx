@@ -4,6 +4,11 @@ import { Typewriter } from "react-simple-typewriter";
 import { ArrowRight, Activity, MapPin, Users, Leaf, BarChart3 } from "lucide-react";
 import { Link } from "react-router";
 import { AuthContext } from "../../Context/AuthContext";
+import poster1 from "../../assets/banner-1.jpg"
+import poster2 from "../../assets/banner-2.jpg"
+import poster3 from "../../assets/banner-3.jpg"
+import poster4 from "../../assets/banner-4.jpg"
+import poster5 from "../../assets/banner-5.jpg"
 
 const Banner = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -12,7 +17,7 @@ const Banner = () => {
   const slides = [
     {
       id: 1,
-      image: "https://images.unsplash.com/photo-1642204705127-accc0dcc5779?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      image: poster1,
       badge: "The Problem",
       badgeIcon: <Activity size={16} />,
       title: "Our cities are facing",
@@ -22,7 +27,7 @@ const Banner = () => {
     },
     {
       id: 2,
-      image: "https://images.unsplash.com/photo-1593113598332-cd288d649433?q=80&w=2070&auto=format&fit=crop",
+      image: poster2,
       badge: "The Solution",
       badgeIcon: <Users size={16} />,
       title: "Join forces for",
@@ -32,7 +37,7 @@ const Banner = () => {
     },
     {
       id: 3,
-      image: "https://images.unsplash.com/photo-1556761175-4b46a572b786?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      image: poster3,
       badge: "The Technology",
       badgeIcon: <MapPin size={16} />,
       title: "Report issues via",
@@ -42,7 +47,7 @@ const Banner = () => {
     },
     {
       id: 4,
-      image: "https://images.unsplash.com/photo-1673051787560-13622b325a9a?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      image: poster4,
       badge: "The Impact",
       badgeIcon: <BarChart3 size={16} />,
       title: "Visualize our",
@@ -52,7 +57,7 @@ const Banner = () => {
     },
     {
       id: 5,
-      image: "https://images.unsplash.com/photo-1681121436581-f34b26b41f89?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      image: poster5,
       badge: "The Future",
       badgeIcon: <Leaf size={16} />,
       title: "Let's Make Our City",

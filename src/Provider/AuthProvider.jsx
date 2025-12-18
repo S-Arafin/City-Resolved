@@ -23,12 +23,25 @@ const AuthProvider = ({children}) => {
     setLoading(true)
     return sendPasswordResetEmail(auth, email)
    }
-   const updateUser = (updateData) =>{
-    return updateProfile(auth.currentUser, updateData)
-   }
+   const updateUser = (name, photo) => {
+        // 2. We pass the correct object structure to Firebase
+        return updateProfile(auth.currentUser, {
+            displayName: name, 
+            photoURL: photo
+        }).then(() => {
+            // 3. CRITICAL: Manually update local state so the Header sees the new image immediately
+            setUser((prevUser) => {
+                return { ...prevUser, displayName: name, photoURL: photo };
+            });
+        }).catch((error) => {
+            console.error("Profile update failed:", error);
+            throw error;
+        });
+    };
    const logout = ()=>{
     return signOut(auth)
    }
+ 
 
     useEffect(()=>{
         const unsubscribe = onAuthStateChanged(auth, (currentUser)=>{
