@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router";
 import { AuthContext } from "../../Context/AuthContext";
 import { FcGoogle } from "react-icons/fc";
 import Swal from "sweetalert2";
+import axios from "axios";
 import Loader from "../../Components/Shared/Loader";
 
 const Login = () => {
@@ -44,15 +45,26 @@ const Login = () => {
   const handleGoogleLogin = async () => {
     try {
       const result = await signInWithGoogle();
+      const user = result.user;
+      
+      const userInfo = {
+        name: user.displayName,
+        email: user.email,
+        photo: user.photoURL
+      };
+
+      await axios.post('http://localhost:3000/users', userInfo);
+
       Swal.fire({
         icon: "success",
         title: "Google Login",
-        text: `Welcome ${result.user.displayName}`,
+        text: `Welcome ${user.displayName}`,
         timer: 1500,
         showConfirmButton: false,
       });
       navigate(from, { replace: true });
     } catch (error) {
+      console.error(error);
       Swal.fire({
         icon: "error",
         title: "Oops...",
@@ -61,7 +73,6 @@ const Login = () => {
     }
   };
 
-  // 4. New Handle Forget Password Function
   const handleForgetPassword = () => {
     const email = emailRef.current.value;
 
@@ -136,7 +147,6 @@ const Login = () => {
                 required
               />
               <label className="label">
-             
                 <a 
                     onClick={handleForgetPassword} 
                     className="label-text-alt link link-hover text-primary cursor-pointer"

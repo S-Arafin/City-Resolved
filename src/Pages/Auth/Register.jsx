@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router";
 import { AuthContext } from "../../Context/AuthContext";
 import { Upload, CheckCircle } from "lucide-react";
 import Swal from "sweetalert2";
+import axios from "axios";
 import { imageUpload } from "../../Components/Elements/ImageUpload";
 import Loader from "../../Components/Shared/Loader";
 
@@ -18,7 +19,7 @@ const Register = () => {
     if (!file) return;
 
     setUploadProgress(1);
-    
+
     try {
       const url = await imageUpload(file, (progress) => {
         setUploadProgress(progress);
@@ -52,8 +53,16 @@ const Register = () => {
 
     try {
       await createUser(email, password);
-      
+
       await updateUser(name, imageUrl);
+
+      const userInfo = {
+        name: name,
+        email: email,
+        photo: imageUrl,
+      };
+
+      await axios.post("http://localhost:3000/users", userInfo);
 
       Swal.fire({
         icon: "success",
@@ -62,9 +71,8 @@ const Register = () => {
         timer: 1500,
         showConfirmButton: false,
       });
-      
+
       navigate("/");
-      
     } catch (error) {
       console.error(error);
       Swal.fire({
@@ -82,8 +90,12 @@ const Register = () => {
       <div className="card w-full max-w-lg bg-base-100 shadow-xl border border-base-300">
         <div className="card-body">
           <div className="text-center mb-6">
-            <h2 className="text-3xl font-extrabold text-primary">Create Account</h2>
-            <p className="text-base-content/70">Join us to make your city better</p>
+            <h2 className="text-3xl font-extrabold text-primary">
+              Create Account
+            </h2>
+            <p className="text-base-content/70">
+              Join us to make your city better
+            </p>
           </div>
 
           <form onSubmit={handleRegister} className="space-y-4">
@@ -113,20 +125,24 @@ const Register = () => {
                   className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                   required={!imageUrl}
                 />
-                
+
                 {uploadProgress > 0 && uploadProgress < 100 ? (
                   <div className="w-full px-4">
-                    <progress 
-                      className="progress progress-primary w-full" 
-                      value={uploadProgress} 
-                      max="100">
-                    </progress>
-                    <p className="text-xs text-center mt-1 font-semibold">{uploadProgress}% Uploading...</p>
+                    <progress
+                      className="progress progress-primary w-full"
+                      value={uploadProgress}
+                      max="100"
+                    ></progress>
+                    <p className="text-xs text-center mt-1 font-semibold">
+                      {uploadProgress}% Uploading...
+                    </p>
                   </div>
                 ) : imageUrl ? (
                   <div className="flex flex-col items-center text-success">
                     <CheckCircle size={32} className="mb-2" />
-                    <span className="text-sm font-bold">Image Uploaded Successfully</span>
+                    <span className="text-sm font-bold">
+                      Image Uploaded Successfully
+                    </span>
                   </div>
                 ) : (
                   <div className="flex flex-col items-center justify-center text-base-content/60">
@@ -166,10 +182,12 @@ const Register = () => {
             <div className="form-control mt-6">
               <button
                 type="submit"
-                disabled={loading || (uploadProgress > 0 && uploadProgress < 100)}
+                disabled={
+                  loading || (uploadProgress > 0 && uploadProgress < 100)
+                }
                 className="btn btn-primary w-full text-lg text-white"
               >
-                {loading ? <Loader/> : "Register"}
+                {loading ? <Loader /> : "Register"}
               </button>
             </div>
           </form>
