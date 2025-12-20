@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { NavLink, Link, useNavigate } from "react-router";
-import { FaBars, FaSun, FaMoon, FaSignOutAlt } from "react-icons/fa";
+import { FaBars, FaSun, FaMoon } from "react-icons/fa";
 import { AuthContext } from "../../Context/AuthContext";
 import useRole from "../../Hooks/useRole";
 import Logo from "./Logo";
@@ -54,25 +54,14 @@ const Header = () => {
           All Issues
         </NavLink>
       </li>
-      
       <li>
         <NavLink 
-          to="/how-it-works" 
+          to="/HowItWorks" 
           className={({ isActive }) => isActive ? "text-primary font-bold" : ""}
         >
-          How It Works
+          How it Works
         </NavLink>
       </li>
-      {user && (
-        <li>
-          <NavLink 
-            to={getDashboardRoute()}
-            className={({ isActive }) => isActive ? "text-primary font-bold" : ""}
-          >
-            Dashboard
-          </NavLink>
-        </li>
-      )}
     </>
   );
 
@@ -109,13 +98,8 @@ const Header = () => {
           </label>
 
           {user ? (
-            <div className="flex items-center gap-3">
-              {/* Profile Image Direct Link */}
-              <Link 
-                to="/dashboard/profile" 
-                className="btn btn-ghost btn-circle avatar border border-primary/20 ring ring-primary ring-offset-base-100 ring-offset-2"
-                title="View Profile"
-              >
+            <div className="dropdown dropdown-end">
+              <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar border border-primary/20 ring ring-primary ring-offset-base-100 ring-offset-2">
                 <div className="w-10 rounded-full">
                   <img 
                     alt="User Profile" 
@@ -123,15 +107,23 @@ const Header = () => {
                     referrerPolicy="no-referrer"
                   />
                 </div>
-              </Link>
-
-              <button 
-                onClick={handleLogout} 
-                className="btn btn-error btn-sm btn-circle text-white tooltip tooltip-bottom"
-                data-tip="Logout"
-              >
-                <FaSignOutAlt />
-              </button>
+              </div>
+              <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52 border border-base-200">
+                <li className="menu-title px-4 py-2 text-primary font-bold border-b border-base-200 mb-2">
+                  {user?.displayName || "Citizen"}
+                </li>
+                <li>
+                  <Link to={getDashboardRoute()} className="justify-between">
+                    Dashboard
+                    <span className="badge badge-sm badge-secondary">View</span>
+                  </Link>
+                </li>
+                <li className="mt-2 border-t border-base-200 pt-2">
+                  <button onClick={handleLogout} className="text-error font-bold hover:bg-error/10">
+                    Logout
+                  </button>
+                </li>
+              </ul>
             </div>
           ) : (
             <div className="flex gap-2 items-center">
