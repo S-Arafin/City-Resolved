@@ -185,7 +185,7 @@ const Register = () => {
                 disabled={
                   loading || (uploadProgress > 0 && uploadProgress < 100)
                 }
-                className="btn btn-primary w-full text-lg text-white"
+                className="btn btn-primary w-full text-lg "
               >
                 {loading ? <Loader /> : "Register"}
               </button>

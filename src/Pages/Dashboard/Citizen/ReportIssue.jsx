@@ -118,8 +118,8 @@ const ReportIssue = () => {
             </div>
 
             <div className="form-control">
-              <label className="label"><span className="label-text font-bold">Description</span></label>
-              <textarea name="description" className="textarea textarea-bordered h-32" placeholder="Describe the issue..." required></textarea>
+              <label className="label"><span className="label-text font-bold">Description </span></label>
+              <textarea name="description" className="textarea textarea-bordered h-32 mx-4" placeholder="Describe the issue..." required></textarea>
             </div>
 
             <div className="form-control mt-6">

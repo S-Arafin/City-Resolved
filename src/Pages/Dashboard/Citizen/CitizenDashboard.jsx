@@ -13,7 +13,6 @@ import {
 const CitizenDashboard = () => {
   const { user } = useContext(AuthContext);
 
-  // 1. Fetch My Issues to calculate stats
   const { data: issues = [], isLoading } = useQuery({
     queryKey: ["my-issues", user?.email],
     enabled: !!user?.email,
@@ -27,7 +26,6 @@ const CitizenDashboard = () => {
 
   if (isLoading) return <Loader />;
 
-  // 2. Calculate Stats
   const totalIssues = issues.length;
   const pendingIssues = issues.filter(
     (issue) => issue.status === "pending"
@@ -35,7 +33,6 @@ const CitizenDashboard = () => {
   const resolvedIssues = issues.filter(
     (issue) => issue.status === "resolved"
   ).length;
-  // "In Progress" or "Working" can be grouped if you have different status names
   const inProgressIssues = issues.filter(
     (issue) => issue.status === "in-progress"
   ).length;
