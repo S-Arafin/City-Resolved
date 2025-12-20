@@ -87,7 +87,7 @@ const IssueDetails = () => {
               </p>
               {user?.email === issue.reportedBy.email && (
                 <div className="flex flex-wrap gap-4 mt-8 pt-6 border-t border-base-200">
-}
+                 
                   {issue.status === "pending" && (
                     <button className="btn btn-outline btn-info gap-2">
                       <FaEdit /> Edit Issue
@@ -141,6 +141,7 @@ const IssueDetails = () => {
             </div>
           )}
         </div>
+
         <div className="lg:col-span-1">
           <div className="card bg-base-100 shadow-xl border border-base-200 p-6 sticky top-24">
             <h3 className="text-xl font-bold mb-6 border-b pb-2">
