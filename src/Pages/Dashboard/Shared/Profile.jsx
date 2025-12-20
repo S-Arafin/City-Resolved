@@ -3,7 +3,7 @@ import { AuthContext } from "../../../Context/AuthContext";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { FaUserCircle, FaEnvelope, FaCrown, FaShieldAlt } from "react-icons/fa";
-import { Link } from "react-router-do";
+import { Link } from "react-router";
 import Swal from "sweetalert2";
 import Loader from "../../../Components/Shared/Loader";
 

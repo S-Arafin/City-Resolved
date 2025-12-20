@@ -27,7 +27,7 @@ import AssignedIssues from "../Pages/Dashboard/Staff/AssignedIssues";
 import CitizenDashboard from "../Pages/Dashboard/Citizen/CitizenDashboard";
 import MyIssues from "../Pages/Dashboard/Citizen/MyIssues";
 import ReportIssue from "../Pages/Dashboard/Citizen/ReportIssue";
-
+import Payment from "../Pages/Dashboard/Payment/Payment";
 import Profile from "../Pages/Dashboard/Shared/Profile";
 
 export const router = createBrowserRouter([
@@ -83,6 +83,10 @@ export const router = createBrowserRouter([
       {
         path: "profile",
         element: <Profile />,
+      },
+      {
+        path: "payment",
+        element: <Payment />,
       },
       {
         path: "admin-home",
