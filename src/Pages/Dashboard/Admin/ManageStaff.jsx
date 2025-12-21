@@ -20,14 +20,14 @@ const ManageStaff = () => {
     const { data: staffMembers = [], isLoading } = useQuery({
         queryKey: ['users', 'staff'],
         queryFn: async () => {
-            const res = await axiosSecure.get('http://localhost:3000/users?role=staff');
+            const res = await axiosSecure.get('/users?role=staff');
             return res.data;
         }
     });
 
     const deleteMutation = useMutation({
         mutationFn: async (id) => {
-            return axiosSecure.delete(`http://localhost:3000/users/${id}`);
+            return axiosSecure.delete(`/users/${id}`);
         },
         onSuccess: () => {
             queryClient.invalidateQueries(['users']);
@@ -95,7 +95,7 @@ const ManageStaff = () => {
                 });
             }
 
-            const res = await axiosSecure.post('http://localhost:3000/users/add-staff', {
+            const res = await axiosSecure.post('/users/add-staff', {
                 name,
                 email,
                 password,
@@ -133,7 +133,7 @@ const ManageStaff = () => {
         
         try {
             const updateData = { name, email };
-            const res = await axiosSecure.patch(`http://localhost:3000/users/info/${editStaff._id}`, updateData);
+            const res = await axiosSecure.patch(`/users/info/${editStaff._id}`, updateData);
 
             if(res.data.modifiedCount > 0){
                 Swal.fire("Success", "Staff info updated", "success");

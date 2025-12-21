@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { AuthContext } from "../../../Context/AuthContext";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
+import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import { Link } from "react-router";
 import { FaEdit, FaTrash, FaEye, FaMapMarkerAlt } from "react-icons/fa";
 import Swal from "sweetalert2";
@@ -9,19 +9,20 @@ import Loader from "../../../Components/Shared/Loader";
 import { imageUpload } from "../../../Components/Elements/ImageUpload";
 
 const MyIssues = () => {
-  const { user } = useContext(AuthContext);
+  const { user, loading: authLoading } = useContext(AuthContext);
   const queryClient = useQueryClient();
   const [filterStatus, setFilterStatus] = useState("all");
   
-  // State for Edit Modal
+  const axiosSecure = useAxiosSecure();
+
   const [editingIssue, setEditingIssue] = useState(null);
   const [modalLoading, setModalLoading] = useState(false);
 
-  const { data: issues = [], isLoading } = useQuery({
+  const { data: issues = [], isLoading: isIssuesLoading } = useQuery({
     queryKey: ["my-issues", user?.email],
-    enabled: !!user?.email,
+    enabled: !authLoading && !!user?.email,
     queryFn: async () => {
-      const res = await axios.get(`http://localhost:3000/my-issues/${user.email}`);
+      const res = await axiosSecure.get(`/my-issues/${user.email}`);
       return res.data;
     },
   });
@@ -32,7 +33,7 @@ const MyIssues = () => {
 
   const deleteMutation = useMutation({
     mutationFn: async (id) => {
-      return axios.delete(`http://localhost:3000/issues/${id}`);
+      return axiosSecure.delete(`/issues/${id}`);
     },
     onSuccess: () => {
       Swal.fire("Deleted!", "Your issue has been deleted.", "success");
@@ -80,7 +81,7 @@ const MyIssues = () => {
 
         const updateData = { title, description, category, location, photo: photoURL };
 
-        await axios.patch(`http://localhost:3000/issues/${editingIssue._id}`, updateData);
+        await axiosSecure.patch(`/issues/${editingIssue._id}`, updateData);
         
         Swal.fire("Success", "Issue updated successfully", "success");
         queryClient.invalidateQueries(["my-issues"]);
@@ -94,7 +95,7 @@ const MyIssues = () => {
     }
   };
 
-  if (isLoading) return <Loader />;
+  if (authLoading || isIssuesLoading) return <Loader />;
 
   return (
     <div className="p-6">

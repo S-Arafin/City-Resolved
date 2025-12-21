@@ -1,17 +1,18 @@
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
+import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import Loader from "../../../Components/Shared/Loader";
 import { FaFileInvoice, FaMoneyBillWave } from "react-icons/fa";
 import jsPDF from "jspdf";
 
 const Payments = () => {
   const [filterType, setFilterType] = useState("all");
+  const axiosSecure = useAxiosSecure();
 
   const { data: payments = [], isLoading } = useQuery({
     queryKey: ["payments"],
     queryFn: async () => {
-      const res = await axios.get("http://localhost:3000/payments");
+      const res = await axiosSecure.get("/payments");
       return res.data;
     },
   });

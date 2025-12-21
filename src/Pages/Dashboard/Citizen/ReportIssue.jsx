@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { AuthContext } from "../../../Context/AuthContext";
-import axios from "axios";
+import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router";
 import { FaPaperPlane, FaMapMarkerAlt } from "react-icons/fa";
@@ -11,6 +11,7 @@ const ReportIssue = () => {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const axiosSecure = useAxiosSecure();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -43,7 +44,7 @@ const ReportIssue = () => {
         createdAt: new Date()
       };
 
-      const dbResponse = await axios.post('http://localhost:3000/issues', issueData);
+      const dbResponse = await axiosSecure.post('/issues', issueData);
 
       if (dbResponse.data.insertedId) {
         Swal.fire({
@@ -93,8 +94,8 @@ const ReportIssue = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="form-control">
                 <label className="label"><span className="label-text font-bold">Category</span></label>
-                <select name="category" className="select select-bordered w-full" required>
-                  <option disabled selected>Select Category</option>
+                <select name="category" className="select select-bordered w-full" required defaultValue="">
+                  <option disabled value="">Select Category</option>
                   <option value="Roads">Roads & Potholes</option>
                   <option value="Lighting">Street Lighting</option>
                   <option value="Water">Water & Drainage</option>

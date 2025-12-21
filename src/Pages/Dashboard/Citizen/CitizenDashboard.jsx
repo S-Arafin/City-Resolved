@@ -1,41 +1,35 @@
 import React, { useContext } from "react";
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
+import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import { AuthContext } from "../../../Context/AuthContext";
 import Loader from "../../../Components/Shared/Loader";
 import {
   FaClipboardList,
   FaSpinner,
   FaCheckCircle,
-  FaTimesCircle,
 } from "react-icons/fa";
 
 const CitizenDashboard = () => {
-  const { user } = useContext(AuthContext);
+  const { user, loading: authLoading } = useContext(AuthContext);
+  const axiosSecure = useAxiosSecure();
 
-  const { data: issues = [], isLoading } = useQuery({
+  const { data: issues = [], isLoading: isIssuesLoading } = useQuery({
     queryKey: ["my-issues", user?.email],
-    enabled: !!user?.email,
+    enabled: !authLoading && !!user?.email, 
     queryFn: async () => {
-      const res = await axios.get(
-        `http://localhost:3000/my-issues/${user.email}`
-      );
+      const res = await axiosSecure.get(`/my-issues/${user.email}`);
       return res.data;
     },
   });
 
-  if (isLoading) return <Loader />;
+  // 4. Show loader if Auth is checking OR Data is fetching
+  if (authLoading || isIssuesLoading) return <Loader />;
 
   const totalIssues = issues.length;
-  const pendingIssues = issues.filter(
-    (issue) => issue.status === "pending"
-  ).length;
-  const resolvedIssues = issues.filter(
-    (issue) => issue.status === "resolved"
-  ).length;
-  const inProgressIssues = issues.filter(
-    (issue) => issue.status === "in-progress"
-  ).length;
+  // Safety check: ensure issues is an array before filtering
+  const pendingIssues = Array.isArray(issues) ? issues.filter((issue) => issue.status === "pending").length : 0;
+  const resolvedIssues = Array.isArray(issues) ? issues.filter((issue) => issue.status === "resolved").length : 0;
+  const inProgressIssues = Array.isArray(issues) ? issues.filter((issue) => issue.status === "in-progress").length : 0;
 
   return (
     <div className="p-6">
@@ -66,7 +60,8 @@ const CitizenDashboard = () => {
         {/* In Progress */}
         <div className="stat bg-base-100 shadow-xl rounded-2xl border border-base-200">
           <div className="stat-figure text-info">
-            <Loader size="small" /> {/* Or an icon */}
+             {/* Using a spinner icon instead of Loader component here to avoid layout shifts */}
+             <FaSpinner className="text-3xl animate-spin" />
           </div>
           <div className="stat-title">In Progress</div>
           <div className="stat-value text-info">{inProgressIssues}</div>
@@ -84,7 +79,7 @@ const CitizenDashboard = () => {
         </div>
       </div>
 
-      {/* Recent Activity / Chart Section Placeholder */}
+      {/* Recent Activity */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="card bg-base-100 shadow-xl border border-base-200 p-6">
           <h3 className="text-xl font-bold mb-4">Recent Activity</h3>

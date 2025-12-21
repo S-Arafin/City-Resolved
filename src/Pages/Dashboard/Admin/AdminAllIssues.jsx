@@ -19,7 +19,7 @@ const AdminAllIssues = () => {
   const { data: issues = [], isLoading } = useQuery({
     queryKey: ["all-issues-admin"],
     queryFn: async () => {
-      const res = await axiosSecure.get("http://localhost:3000/issues");
+      const res = await axiosSecure.get("/issues");
       return res.data;
     },
   });
@@ -27,14 +27,14 @@ const AdminAllIssues = () => {
   const { data: staffList = [] } = useQuery({
     queryKey: ["staff-list"],
     queryFn: async () => {
-      const res = await axiosSecure.get("http://localhost:3000/users?role=staff");
+      const res = await axiosSecure.get("/users?role=staff");
       return res.data;
     },
   });
 
   const assignMutation = useMutation({
     mutationFn: async ({ issueId, staff }) => {
-      return axiosSecure.patch(`http://localhost:3000/issues/${issueId}/assign`, {
+      return axiosSecure.patch(`/issues/${issueId}/assign`, {
         staffId: staff._id,
         staffName: staff.name,
         staffEmail: staff.email,
@@ -54,7 +54,7 @@ const AdminAllIssues = () => {
 
   const rejectMutation = useMutation({
     mutationFn: async (id) => {
-      return axiosSecure.patch(`http://localhost:3000/issues/${id}/reject`);
+      return axiosSecure.patch(`/issues/${id}/reject`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["all-issues-admin"]);

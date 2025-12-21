@@ -13,7 +13,7 @@ const ManageUsers = () => {
   const { data: users = [], isLoading } = useQuery({
     queryKey: ["users", "citizen"],
     queryFn: async () => {
-      const res = await axiosSecure.get("http://localhost:3000/users?role=citizen");
+      const res = await axiosSecure.get("/users?role=citizen");
       return res.data;
     },
   });
@@ -21,7 +21,7 @@ const ManageUsers = () => {
   const statusMutation = useMutation({
     mutationFn: async ({ id, isBlocked }) => {
       const res = await axiosSecure.patch(
-        `http://localhost:3000/users/status/${id}`,
+        `/users/status/${id}`,
         { isBlocked }
       );
       return res.data;
