@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
+import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import Swal from "sweetalert2";
 import { AuthContext } from "../../../Context/AuthContext";
 import Loader from "../../../Components/Shared/Loader";
@@ -15,21 +15,20 @@ import { Link } from "react-router";
 const AssignedIssues = () => {
   const { user } = useContext(AuthContext);
   const queryClient = useQueryClient();
+  const axiosSecure = useAxiosSecure();
 
   const { data: issues = [], isLoading } = useQuery({
     queryKey: ["assigned-issues", user?.email],
     enabled: !!user?.email,
     queryFn: async () => {
-      const res = await axios.get(
-        `http://localhost:3000/issues/assigned/${user.email}`
-      );
+      const res = await axiosSecure.get(`/issues/assigned/${user.email}`);
       return res.data;
     },
   });
 
   const statusMutation = useMutation({
     mutationFn: async ({ id, newStatus }) => {
-      return axios.patch(`http://localhost:3000/issues/status/${id}`, {
+      return axiosSecure.patch(`/issues/status/${id}`, {
         status: newStatus,
         userEmail: user.email,
         userName: user.displayName,
@@ -64,7 +63,6 @@ const AssignedIssues = () => {
 
       <div className="overflow-x-auto bg-base-100 shadow-xl rounded-lg border border-base-200">
         <table className="table">
-          {/* Head */}
           <thead className="bg-base-200">
             <tr>
               <th>Issue Details</th>

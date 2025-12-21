@@ -1,7 +1,7 @@
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { useEffect, useState, useContext } from "react";
 import { AuthContext } from "../../../Context/AuthContext";
-import axios from "axios";
+import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router";
 
@@ -9,18 +9,19 @@ const CheckoutForm = ({ price, type, issueId }) => {
   const stripe = useStripe();
   const elements = useElements();
   const { user } = useContext(AuthContext);
+  const axiosSecure = useAxiosSecure();
   const [clientSecret, setClientSecret] = useState("");
   const [processing, setProcessing] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     if (price > 0) {
-      axios.post("http://localhost:3000/create-payment-intent", { price })
+      axiosSecure.post("/create-payment-intent", { price })
         .then((res) => {
           setClientSecret(res.data.clientSecret);
         });
     }
-  }, [price]);
+  }, [price, axiosSecure]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -59,19 +60,18 @@ const CheckoutForm = ({ price, type, issueId }) => {
       setProcessing(false);
     } else {
       if (paymentIntent.status === "succeeded") {
-        // Save payment to database
         const paymentInfo = {
           email: user.email,
           name: user.displayName,
           price: price,
           transactionId: paymentIntent.id,
-          date: new Date(), // utc date convert. use moment js to 
-          type: type, // 'subscription' or 'boost'
+          date: new Date(),
+          type: type,
           issueId: issueId || null,
           status: 'success'
         };
 
-        const res = await axios.post("http://localhost:3000/payments", paymentInfo);
+        const res = await axiosSecure.post("/payments", paymentInfo);
         
         if (res.data?.insertedId) {
             Swal.fire("Success", "Payment Successful!", "success");

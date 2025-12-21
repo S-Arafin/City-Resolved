@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { AuthContext } from "../../../Context/AuthContext";
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
+import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import { FaUserCircle, FaEnvelope, FaCrown, FaShieldAlt } from "react-icons/fa";
 import { Link } from "react-router";
 import Swal from "sweetalert2";
@@ -9,12 +9,13 @@ import Loader from "../../../Components/Shared/Loader";
 
 const Profile = () => {
   const { user } = useContext(AuthContext);
+  const axiosSecure = useAxiosSecure();
 
   const { data: dbUser, isLoading } = useQuery({
     queryKey: [user?.email, 'profile'],
     enabled: !!user?.email,
     queryFn: async () => {
-      const res = await axios.get(`http://localhost:3000/users/${user.email}`);
+      const res = await axiosSecure.get(`/users/${user.email}`);
       return res.data;
     }
   });

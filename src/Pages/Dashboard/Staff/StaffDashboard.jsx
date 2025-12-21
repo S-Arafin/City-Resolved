@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
+import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import { AuthContext } from "../../../Context/AuthContext";
 import Loader from "../../../Components/Shared/Loader";
 import { FaClipboardList, FaCheckCircle, FaArchive } from "react-icons/fa";
@@ -17,14 +17,13 @@ import {
 
 const StaffDashboard = () => {
   const { user } = useContext(AuthContext);
+  const axiosSecure = useAxiosSecure();
 
   const { data: stats = {}, isLoading } = useQuery({
     queryKey: ["staff-stats", user?.email],
     enabled: !!user?.email,
     queryFn: async () => {
-      const res = await axios.get(
-        `http://localhost:3000/staff-stats/${user.email}`
-      );
+      const res = await axiosSecure.get(`/staff-stats/${user.email}`);
       return res.data;
     },
   });
