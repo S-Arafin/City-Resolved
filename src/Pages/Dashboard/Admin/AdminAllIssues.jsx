@@ -5,7 +5,6 @@ import Swal from "sweetalert2";
 import {
   FaClipboardList,
   FaUserPlus,
-  FaTimesCircle,
   FaCheckCircle,
   FaArrowUp,
 } from "react-icons/fa";
@@ -115,10 +114,7 @@ const AdminAllIssues = () => {
           </thead>
           <tbody>
             {issues.map((issue) => (
-              <tr
-                key={issue._id}
-                className={issue.priority === "high" ? "bg-red-50" : ""}
-              >
+              <tr key={issue._id}>
                 <td>
                   <div className="flex items-center gap-3">
                     <div className="avatar">
