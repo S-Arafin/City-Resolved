@@ -1,6 +1,5 @@
 import React, { useState, useRef } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import axios from 'axios';
 import useAxiosSecure from '../../../Hooks/useAxiosSecure';
 import Swal from 'sweetalert2';
 import { FaUserTie, FaTrash, FaPlus, FaEnvelope, FaUser, FaEdit, FaLock, FaCloudUploadAlt, FaFileImage } from 'react-icons/fa';
@@ -12,23 +11,23 @@ const ManageStaff = () => {
     const [loading, setLoading] = useState(false);
     const [editStaff, setEditStaff] = useState(null);
     
-    // File Upload States
     const [dragActive, setDragActive] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
     const [uploadProgress, setUploadProgress] = useState(0);
     const inputRef = useRef(null);
+    const axiosSecure = useAxiosSecure();
 
     const { data: staffMembers = [], isLoading } = useQuery({
         queryKey: ['users', 'staff'],
         queryFn: async () => {
-            const res = await axios.get('http://localhost:3000/users?role=staff');
+            const res = await axiosSecure.get('http://localhost:3000/users?role=staff');
             return res.data;
         }
     });
 
     const deleteMutation = useMutation({
         mutationFn: async (id) => {
-            return axios.delete(`http://localhost:3000/users/${id}`);
+            return axiosSecure.delete(`http://localhost:3000/users/${id}`);
         },
         onSuccess: () => {
             queryClient.invalidateQueries(['users']);
@@ -51,7 +50,6 @@ const ManageStaff = () => {
         });
     };
 
-    // Drag & Drop Handlers
     const handleDrag = (e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -97,7 +95,7 @@ const ManageStaff = () => {
                 });
             }
 
-            const res = await axios.post('http://localhost:3000/users/add-staff', {
+            const res = await axiosSecure.post('http://localhost:3000/users/add-staff', {
                 name,
                 email,
                 password,
@@ -135,7 +133,7 @@ const ManageStaff = () => {
         
         try {
             const updateData = { name, email };
-            const res = await axios.patch(`http://localhost:3000/users/info/${editStaff._id}`, updateData);
+            const res = await axiosSecure.patch(`http://localhost:3000/users/info/${editStaff._id}`, updateData);
 
             if(res.data.modifiedCount > 0){
                 Swal.fire("Success", "Staff info updated", "success");

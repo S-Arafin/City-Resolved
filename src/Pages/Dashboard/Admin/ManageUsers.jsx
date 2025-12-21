@@ -1,6 +1,6 @@
 import React from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
+import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import Swal from "sweetalert2";
 import { FaUsers, FaBan, FaCheckCircle, FaCrown } from "react-icons/fa";
 import Loader from "../../../Components/Shared/Loader";
@@ -8,17 +8,19 @@ import Loader from "../../../Components/Shared/Loader";
 const ManageUsers = () => {
   const queryClient = useQueryClient();
 
+  const axiosSecure = useAxiosSecure();
+
   const { data: users = [], isLoading } = useQuery({
     queryKey: ["users", "citizen"],
     queryFn: async () => {
-      const res = await axios.get("http://localhost:3000/users?role=citizen");
+      const res = await axiosSecure.get("http://localhost:3000/users?role=citizen");
       return res.data;
     },
   });
 
   const statusMutation = useMutation({
     mutationFn: async ({ id, isBlocked }) => {
-      const res = await axios.patch(
+      const res = await axiosSecure.patch(
         `http://localhost:3000/users/status/${id}`,
         { isBlocked }
       );
