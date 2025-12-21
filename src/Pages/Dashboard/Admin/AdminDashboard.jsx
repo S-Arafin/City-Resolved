@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import Loader from "../../../Components/Shared/Loader";
 import { FaUsers, FaClipboardList, FaMoneyBillWave, FaSpinner } from "react-icons/fa";
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
@@ -9,10 +10,12 @@ import { AuthContext } from "../../../Context/AuthContext";
 const AdminDashboard = () => {
     const { user } = useContext(AuthContext);
 
+    const axiosSecure = useAxiosSecure();
+
     const { data: stats = {}, isLoading } = useQuery({
         queryKey: ['admin-stats'],
         queryFn: async () => {
-            const res = await axios.get('http://localhost:3000/admin-stats');
+            const res = await axiosSecure.get('http://localhost:3000/admin-stats');
             return res.data;
         }
     });

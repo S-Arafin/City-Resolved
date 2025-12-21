@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import axios from "axios";
 import Swal from "sweetalert2";
 import {
@@ -13,11 +14,12 @@ import Loader from "../../../Components/Shared/Loader";
 const AdminAllIssues = () => {
   const queryClient = useQueryClient();
   const [selectedIssue, setSelectedIssue] = useState(null);
+  const axiosSecure = useAxiosSecure();
 
   const { data: issues = [], isLoading } = useQuery({
     queryKey: ["all-issues-admin"],
     queryFn: async () => {
-      const res = await axios.get("http://localhost:3000/issues");
+      const res = await axiosSecure.get("http://localhost:3000/issues");
       return res.data;
     },
   });
@@ -25,14 +27,14 @@ const AdminAllIssues = () => {
   const { data: staffList = [] } = useQuery({
     queryKey: ["staff-list"],
     queryFn: async () => {
-      const res = await axios.get("http://localhost:3000/users?role=staff");
+      const res = await axiosSecure.get("http://localhost:3000/users?role=staff");
       return res.data;
     },
   });
 
   const assignMutation = useMutation({
     mutationFn: async ({ issueId, staff }) => {
-      return axios.patch(`http://localhost:3000/issues/${issueId}/assign`, {
+      return axiosSecure.patch(`http://localhost:3000/issues/${issueId}/assign`, {
         staffId: staff._id,
         staffName: staff.name,
         staffEmail: staff.email,
@@ -52,7 +54,7 @@ const AdminAllIssues = () => {
 
   const rejectMutation = useMutation({
     mutationFn: async (id) => {
-      return axios.patch(`http://localhost:3000/issues/${id}/reject`);
+      return axiosSecure.patch(`http://localhost:3000/issues/${id}/reject`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["all-issues-admin"]);

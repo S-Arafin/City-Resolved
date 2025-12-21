@@ -3,10 +3,12 @@ import { AuthContext } from '../Context/AuthContext';
 import { createUserWithEmailAndPassword, GoogleAuthProvider, onAuthStateChanged, sendPasswordResetEmail, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile } from 'firebase/auth';
 import { auth } from '../Firebase/Firebase.init';
 
-const googleProvider = new GoogleAuthProvider;
+const googleProvider = new GoogleAuthProvider();
+
 const AuthProvider = ({children}) => {
     const [user, setUser] = useState(null)
     const [loading, setLoading] = useState(true)
+
     const createUser = (email, password) => {
         setLoading(true)
         return createUserWithEmailAndPassword(auth, email, password)
@@ -16,20 +18,18 @@ const AuthProvider = ({children}) => {
         return signInWithEmailAndPassword(auth, email, password)
     }
     const signInWithGoogle =() =>{
-    setLoading(true)
-    return signInWithPopup(auth, googleProvider)
-   }
-   const resetPass = (email) =>{
-    setLoading(true)
-    return sendPasswordResetEmail(auth, email)
-   }
-   const updateUser = (name, photo) => {
-        // 2. We pass the correct object structure to Firebase
+        setLoading(true)
+        return signInWithPopup(auth, googleProvider)
+    }
+    const resetPass = (email) =>{
+        setLoading(true)
+        return sendPasswordResetEmail(auth, email)
+    }
+    const updateUser = (name, photo) => {
         return updateProfile(auth.currentUser, {
             displayName: name, 
             photoURL: photo
         }).then(() => {
-            // 3. CRITICAL: Manually update local state so the Header sees the new image immediately
             setUser((prevUser) => {
                 return { ...prevUser, displayName: name, photoURL: photo };
             });
@@ -38,10 +38,10 @@ const AuthProvider = ({children}) => {
             throw error;
         });
     };
-   const logout = ()=>{
-    return signOut(auth)
-   }
- 
+    
+    const logout = ()=>{
+        return signOut(auth)
+    }
 
     useEffect(()=>{
         const unsubscribe = onAuthStateChanged(auth, (currentUser)=>{
@@ -53,7 +53,6 @@ const AuthProvider = ({children}) => {
         }
     },[])
 
-
     const authInfo = {
         createUser,
         signIn,
@@ -62,7 +61,7 @@ const AuthProvider = ({children}) => {
         updateUser,
         user,
         loading,
-        logout
+        logout 
     }
     return (
         <AuthContext value={authInfo}>
