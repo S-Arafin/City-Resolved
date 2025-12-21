@@ -16,7 +16,7 @@ const useAxiosSecure = () => {
 
     axiosSecure.interceptors.request.use(async function (config) {
         
-        const token = auth.currentUser ? await auth.currentUser.getIdToken(true) : null;
+        const token = auth.currentUser ? await auth.currentUser.getIdToken() : null;
         if (token) {
             config.headers.authorization = `Bearer ${token}`;
         }

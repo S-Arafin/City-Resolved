@@ -108,7 +108,7 @@ const CheckoutForm = ({ price, type, issueId }) => {
         />
       </div>
       <button 
-        className="btn btn-primary w-full text-white" 
+        className="btn btn-primary w-full " 
         type="submit" 
         disabled={!stripe || !clientSecret || processing}
       >

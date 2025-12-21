@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
+import useAxiosSecure from '../../Hooks/useAxiosSecure';
 import { Link, useNavigate } from 'react-router';
 import { FaSearch, FaMapMarkerAlt, FaThumbsUp, FaArrowUp } from 'react-icons/fa';
 import Swal from 'sweetalert2';
@@ -11,13 +12,12 @@ const AllIssues = () => {
     const { user } = useContext(AuthContext);
     const queryClient = useQueryClient();
     const navigate = useNavigate();
+    const axiosSecure = useAxiosSecure();
     
-    // Filter States
     const [search, setSearch] = useState('');
     const [status, setStatus] = useState('');
     const [category, setCategory] = useState('');
 
-    // Fetch Issues
     const { data: issues = [], isLoading } = useQuery({
         queryKey: ['all-issues', search, status, category],
         queryFn: async () => {
@@ -28,14 +28,13 @@ const AllIssues = () => {
         }
     });
 
-    // Upvote Mutation
     const upvoteMutation = useMutation({
         mutationFn: async (issueId) => {
             if (!user) {
                 navigate('/auth/login');
                 throw new Error("Please login");
             }
-            const res = await axios.patch(`http://localhost:3000/issues/upvote/${issueId}`, {
+            const res = await axiosSecure.patch(`/issues/upvote/${issueId}`, {
                 userEmail: user.email
             });
             return res.data;
@@ -44,7 +43,7 @@ const AllIssues = () => {
             if (data.message) {
                 Swal.fire('Notice', data.message, 'warning');
             } else {
-                queryClient.invalidateQueries(['all-issues']); // Refresh UI
+                queryClient.invalidateQueries(['all-issues']);
                 Swal.fire({
                     position: "top-end",
                     icon: "success",
@@ -66,12 +65,10 @@ const AllIssues = () => {
 
     return (
         <div className="container mx-auto px-4 py-8 min-h-screen">
-            {/* Header & Controls */}
             <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
                 <h2 className="text-3xl font-bold text-primary">Reported Issues</h2>
                 
                 <div className="flex flex-wrap gap-2 w-full md:w-auto">
-                    {/* Search */}
                     <div className="join w-full md:w-auto">
                         <input 
                             type="text" 
@@ -83,7 +80,6 @@ const AllIssues = () => {
                         <button className="btn btn-primary join-item"><FaSearch /></button>
                     </div>
 
-                    {/* Filters */}
                     <select 
                         className="select select-bordered" 
                         value={status} 
@@ -111,11 +107,9 @@ const AllIssues = () => {
                 </div>
             </div>
 
-            {/* Issues Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {issues.map(issue => (
                     <div key={issue._id} className="card bg-base-100 shadow-xl border border-base-200 hover:shadow-2xl transition-all duration-300">
-                        {/* Priority Badge */}
                         {issue.priority === 'high' && (
                              <div className="absolute top-4 right-4 z-10">
                                 <span className="badge badge-error gap-1 animate-pulse">

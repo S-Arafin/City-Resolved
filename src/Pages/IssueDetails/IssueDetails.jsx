@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { useParams, useNavigate, Link } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import { AuthContext } from "../../Context/AuthContext";
 import Loader from "../../Components/Shared/Loader";
 import {
@@ -17,6 +18,7 @@ const IssueDetails = () => {
   const { id } = useParams();
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
+  const axiosSecure = useAxiosSecure();
 
   const { data: issue, isLoading: isIssueLoading } = useQuery({
     queryKey: ["issue", id],
@@ -45,7 +47,7 @@ const IssueDetails = () => {
       confirmButtonText: "Yes, delete it!",
     }).then(async (result) => {
       if (result.isConfirmed) {
-        await axios.delete(`http://localhost:3000/issues/${id}`);
+        await axiosSecure.delete(`/issues/${id}`);
         Swal.fire("Deleted!", "Your issue has been deleted.", "success");
         navigate("/dashboard/my-issues");
       }
@@ -87,7 +89,7 @@ const IssueDetails = () => {
               </p>
               {user?.email === issue.reportedBy.email && (
                 <div className="flex flex-wrap gap-4 mt-8 pt-6 border-t border-base-200">
-                 
+                  
                   {issue.status === "pending" && (
                     <button className="btn btn-outline btn-info gap-2">
                       <FaEdit /> Edit Issue
