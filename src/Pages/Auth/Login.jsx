@@ -1,4 +1,4 @@
-import React, { useContext, useState, useRef } from "react"; 
+import React, { useContext, useState, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
 import { AuthContext } from "../../Context/AuthContext";
 import { FcGoogle } from "react-icons/fc";
@@ -46,14 +46,17 @@ const Login = () => {
     try {
       const result = await signInWithGoogle();
       const user = result.user;
-      
+
       const userInfo = {
         name: user.displayName,
         email: user.email,
-        photo: user.photoURL
+        photo: user.photoURL,
       };
 
-      await axios.post('http://localhost:3000/users', userInfo);
+      await axios.post(
+        "https://city-resolved-backend.vercel.app/users",
+        userInfo
+      );
 
       Swal.fire({
         icon: "success",
@@ -86,12 +89,12 @@ const Login = () => {
     }
 
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        Swal.fire({
-            icon: "error",
-            title: "Invalid Email",
-            text: "Please enter a valid email address.",
-        });
-        return;
+      Swal.fire({
+        icon: "error",
+        title: "Invalid Email",
+        text: "Please enter a valid email address.",
+      });
+      return;
     }
 
     resetPass(email)
@@ -147,9 +150,9 @@ const Login = () => {
                 required
               />
               <label className="label">
-                <a 
-                    onClick={handleForgetPassword} 
-                    className="label-text-alt link link-hover text-primary cursor-pointer"
+                <a
+                  onClick={handleForgetPassword}
+                  className="label-text-alt link link-hover text-primary cursor-pointer"
                 >
                   Forgot password?
                 </a>
@@ -162,7 +165,7 @@ const Login = () => {
                 disabled={loading}
                 className="btn btn-primary w-full text-lg"
               >
-                {loading ? <Loader/> : "Login"}
+                {loading ? <Loader /> : "Login"}
               </button>
             </div>
           </form>

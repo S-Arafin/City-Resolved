@@ -33,7 +33,7 @@ const HowItWorks = () => {
           <div className="hidden lg:block absolute top-1/2 left-0 w-full h-1 bg-gray-200 -z-10 transform -translate-y-1/2"></div>
 
           <div className="card bg-base-100 shadow-xl border border-base-200 hover:shadow-2xl transition-all duration-300 text-center p-6">
-            <div className="w-16 h-16 bg-primary text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl shadow-lg">
+            <div className="w-16 h-16 bg-primary  rounded-full flex items-center justify-center mx-auto mb-4 text-2xl shadow-lg">
               <FaCamera />
             </div>
             <h3 className="text-xl font-bold mb-2">1. Report Issue</h3>
@@ -43,7 +43,7 @@ const HowItWorks = () => {
             </p>
           </div>
           <div className="card bg-base-100 shadow-xl border border-base-200 hover:shadow-2xl transition-all duration-300 text-center p-6">
-            <div className="w-16 h-16 bg-secondary text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl shadow-lg">
+            <div className="w-16 h-16 bg-secondary  rounded-full flex items-center justify-center mx-auto mb-4 text-2xl shadow-lg">
               <FaUserTie />
             </div>
             <h3 className="text-xl font-bold mb-2">2. Admin Review</h3>
@@ -53,7 +53,7 @@ const HowItWorks = () => {
             </p>
           </div>
           <div className="card bg-base-100 shadow-xl border border-base-200 hover:shadow-2xl transition-all duration-300 text-center p-6">
-            <div className="w-16 h-16 bg-accent text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl shadow-lg">
+            <div className="w-16 h-16 bg-accent  rounded-full flex items-center justify-center mx-auto mb-4 text-2xl shadow-lg">
               <FaTools />
             </div>
             <h3 className="text-xl font-bold mb-2">3. Work Begins</h3>
@@ -63,7 +63,7 @@ const HowItWorks = () => {
             </p>
           </div>
           <div className="card bg-base-100 shadow-xl border border-base-200 hover:shadow-2xl transition-all duration-300 text-center p-6">
-            <div className="w-16 h-16 bg-success text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl shadow-lg">
+            <div className="w-16 h-16 bg-success  rounded-full flex items-center justify-center mx-auto mb-4 text-2xl shadow-lg">
               <FaCheckCircle />
             </div>
             <h3 className="text-xl font-bold mb-2">4. Resolved!</h3>

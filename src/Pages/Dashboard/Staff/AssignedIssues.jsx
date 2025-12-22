@@ -76,7 +76,7 @@ const AssignedIssues = () => {
             {issues.map((issue) => (
               <tr
                 key={issue._id}
-                className={issue.priority === "high" ? "bg-orange-50" : ""}
+                className={issue.priority === "high" ? " " : ""}
               >
                 <td>
                   <div className="flex items-center gap-3">

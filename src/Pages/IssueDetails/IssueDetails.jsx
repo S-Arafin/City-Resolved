@@ -23,7 +23,9 @@ const IssueDetails = () => {
   const { data: issue, isLoading: isIssueLoading } = useQuery({
     queryKey: ["issue", id],
     queryFn: async () => {
-      const res = await axios.get(`http://localhost:3000/issues/${id}`);
+      const res = await axios.get(
+        `https://city-resolved-backend.vercel.app/issues/${id}`
+      );
       return res.data;
     },
   });
@@ -31,7 +33,9 @@ const IssueDetails = () => {
   const { data: timeline = [], isLoading: isTimelineLoading } = useQuery({
     queryKey: ["timeline", id],
     queryFn: async () => {
-      const res = await axios.get(`http://localhost:3000/timelines/${id}`);
+      const res = await axios.get(
+        `https://city-resolved-backend.vercel.app/timelines/${id}`
+      );
       return res.data;
     },
   });
@@ -89,7 +93,6 @@ const IssueDetails = () => {
               </p>
               {user?.email === issue.reportedBy.email && (
                 <div className="flex flex-wrap gap-4 mt-8 pt-6 border-t border-base-200">
-                  
                   {issue.status === "pending" && (
                     <button className="btn btn-outline btn-info gap-2">
                       <FaEdit /> Edit Issue
@@ -102,7 +105,6 @@ const IssueDetails = () => {
                     <FaTrash /> Delete
                   </button>
 
-                  
                   {issue.priority !== "high" && (
                     <Link
                       to="/dashboard/payment"

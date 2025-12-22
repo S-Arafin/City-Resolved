@@ -62,7 +62,10 @@ const Register = () => {
         photo: imageUrl,
       };
 
-      await axios.post("http://localhost:3000/users", userInfo);
+      await axios.post(
+        "https://city-resolved-backend.vercel.app/users",
+        userInfo
+      );
 
       Swal.fire({
         icon: "success",

@@ -13,7 +13,7 @@ const Home = () => {
     queryKey: ["recent-resolved"],
     queryFn: async () => {
       const res = await axios.get(
-        "http://localhost:3000/issues/resolved/recent"
+        "https://city-resolved-backend.vercel.app/issues/resolved/recent"
       );
       return res.data;
     },
