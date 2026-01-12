@@ -29,6 +29,9 @@ import MyIssues from "../Pages/Dashboard/Citizen/MyIssues";
 import ReportIssue from "../Pages/Dashboard/Citizen/ReportIssue";
 import Payment from "../Pages/Dashboard/Payment/Payment";
 import Profile from "../Pages/Dashboard/Shared/Profile";
+import AboutUs from "../Pages/About/AboutUs";
+import Community from "../Pages/Community/Community";
+import Contact from "../Pages/Contact/Contact";
 
 export const router = createBrowserRouter([
   {
@@ -47,6 +50,18 @@ export const router = createBrowserRouter([
       {
         path: "how-it-works",
         element: <HowItWorks />,
+      },
+      {
+        path: "about",
+        element: <AboutUs />,
+      },
+      {
+        path: "community",
+        element: <Community />,
+      },
+      {
+        path: "contact",
+        element: <Contact />,
       },
       {
         path: "issues/:id",
@@ -152,6 +167,6 @@ export const router = createBrowserRouter([
   },
   {
     path: "*",
-    element: <ErrorPage /> 
-  }
+    element: <ErrorPage />,
+  },
 ]);

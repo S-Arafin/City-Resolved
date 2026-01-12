@@ -16,13 +16,19 @@ const AdminAllIssues = () => {
   const [selectedIssue, setSelectedIssue] = useState(null);
   const axiosSecure = useAxiosSecure();
 
+  // --- FIX APPLIED HERE ---
   const { data: issues = [], isLoading } = useQuery({
     queryKey: ["all-issues-admin"],
     queryFn: async () => {
       const res = await axiosSecure.get("/issues");
-      return res.data;
+      // Check if data is an array (old backend) or object (new backend)
+      if (Array.isArray(res.data)) {
+          return res.data;
+      }
+      return res.data.issues || [];
     },
   });
+  // ------------------------
 
   const { data: staffList = [] } = useQuery({
     queryKey: ["staff-list"],

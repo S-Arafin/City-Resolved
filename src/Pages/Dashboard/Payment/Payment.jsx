@@ -4,12 +4,10 @@ import React from "react";
 import { useLocation } from "react-router";
 import CheckoutForm from "./CheckoutForm";
 
-// Replace with your own Publishable Key from Stripe Dashboard
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PK);
 
 const Payment = () => {
     const location = useLocation();
-    // Default to subscription if no state provided (safety)
     const { price, type, issueId } = location.state || { price: 1000, type: 'subscription' };
 
     return (
