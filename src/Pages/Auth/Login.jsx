@@ -2,7 +2,7 @@ import React, { useContext, useState, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
 import { AuthContext } from "../../Context/AuthContext";
 import { FcGoogle } from "react-icons/fc";
-import { FaCity, FaShieldAlt, FaBolt, FaArrowRight, FaUserSecret } from "react-icons/fa";
+import { FaCity, FaShieldAlt, FaBolt, FaArrowRight, FaUserSecret, FaUserTie, FaUser } from "react-icons/fa";
 import Swal from "sweetalert2";
 import axios from "axios";
 import { motion } from "framer-motion";
@@ -36,7 +36,7 @@ const Login = () => {
       Swal.fire({
         icon: "error",
         title: "Login Failed",
-        text: error.message, // Firebase usually gives specific errors like "user-not-found"
+        text: error.message,
       });
     } finally {
       setLoading(false);
@@ -53,9 +53,19 @@ const Login = () => {
     performLogin(email, password);
   };
 
+  // Admin Demo
   const handleDemoLogin = () => {
-    // Fixed spelling: assignment11 instead of assingment11
     performLogin("arafin@assignment11.com", "arafin@assignment11");
+  };
+
+  // Staff Demo
+  const handleStaffDemo = () => {
+    performLogin("sultan@thetown.com", "123456");
+  };
+
+  // User Demo
+  const handleUserDemo = () => {
+    performLogin("arafin@gmail.com", "123456");
   };
 
   const handleGoogleLogin = async () => {
@@ -170,20 +180,51 @@ const Login = () => {
               <p className="text-base-content/60">Please enter your details to sign in.</p>
             </div>
 
-            {/* --- DEMO LOGIN BUTTON (One Click) --- */}
-            <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={handleDemoLogin}
-                type="button"
-                className="btn btn-neutral w-full mb-6 gap-3 group relative overflow-hidden h-12"
-            >
-                <div className="absolute inset-0 bg-gradient-to-r from-gray-700 to-black opacity-0 group-hover:opacity-100 transition-opacity" />
-                <span className="relative flex items-center justify-center gap-2 w-full">
-                    <FaUserSecret className="text-lg" />
-                    One-Click Admin Demo Login
-                </span>
-            </motion.button>
+            {/* --- DEMO LOGIN BUTTONS SECTION --- */}
+            <div className="grid grid-cols-1 gap-3 mb-6">
+                {/* Admin */}
+                <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={handleDemoLogin}
+                    type="button"
+                    className="btn btn-neutral w-full group relative overflow-hidden"
+                >
+                    <span className="relative flex items-center justify-center gap-2 w-full">
+                        <FaUserSecret className="text-lg" />
+                        Admin Demo
+                    </span>
+                </motion.button>
+
+                {/* Staff & User Side-by-Side */}
+                <div className="grid grid-cols-2 gap-3">
+                    <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={handleStaffDemo}
+                        type="button"
+                        className="btn btn-accent text-white w-full"
+                    >
+                        <span className="flex items-center justify-center gap-2">
+                            <FaUserTie className="text-lg" />
+                            Staff Demo
+                        </span>
+                    </motion.button>
+
+                    <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={handleUserDemo}
+                        type="button"
+                        className="btn btn-secondary w-full"
+                    >
+                        <span className="flex items-center justify-center gap-2">
+                            <FaUser className="text-lg" />
+                            User Demo
+                        </span>
+                    </motion.button>
+                </div>
+            </div>
 
             <div className="divider text-xs opacity-50 uppercase font-bold tracking-widest my-6">Or login with email</div>
 

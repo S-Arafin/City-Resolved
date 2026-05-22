@@ -50,6 +50,8 @@ const Header = () => {
           Home
         </NavLink>
       </li>
+      
+      
       <li>
         <NavLink
           to="/all-issues"
@@ -60,17 +62,23 @@ const Header = () => {
           All Issues
         </NavLink>
       </li>
-      <li>
+      {
+        user&&
+          <li>
         <NavLink
           to="/how-it-works"
           className={({ isActive }) =>
             isActive ? "text-primary font-bold" : ""
           }
         >
-          How it Works
+          Workflow
         </NavLink>
       </li>
-      <li>
+        
+      }
+
+      {
+        user&&<li>
         <NavLink
           to="/community"
           className={({ isActive }) =>
@@ -80,6 +88,9 @@ const Header = () => {
           Community
         </NavLink>
       </li>
+      }
+      
+      
       <li>
         <NavLink
           to="/about"

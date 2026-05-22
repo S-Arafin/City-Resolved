@@ -9,7 +9,7 @@ import {
   FaCheckCircle,
   FaArrowUp,
 } from "react-icons/fa";
-import Loader from "../../../Components/Shared/Loader";
+import { motion, AnimatePresence } from "framer-motion";
 
 const AdminAllIssues = () => {
   const queryClient = useQueryClient();
@@ -23,7 +23,7 @@ const AdminAllIssues = () => {
       const res = await axiosSecure.get("/issues");
       // Check if data is an array (old backend) or object (new backend)
       if (Array.isArray(res.data)) {
-          return res.data;
+        return res.data;
       }
       return res.data.issues || [];
     },
@@ -101,15 +101,67 @@ const AdminAllIssues = () => {
     document.getElementById("assign_modal").showModal();
   };
 
-  if (isLoading) return <Loader />;
+  // --- Animation Variants ---
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.05 },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, x: -20 },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: { type: "spring", stiffness: 100 },
+    },
+  };
+
+  // --- SKELETON LOADER ---
+  if (isLoading)
+    return (
+      <div className="p-6 space-y-6">
+        <div className="h-10 w-64 bg-base-300 rounded-lg animate-pulse mb-6"></div>
+        <div className="bg-base-100 shadow-xl rounded-lg border border-base-200 overflow-hidden">
+          <div className="h-12 bg-base-200 animate-pulse"></div>
+          {[...Array(6)].map((_, i) => (
+            <div
+              key={i}
+              className="flex items-center p-4 border-b border-base-200 animate-pulse gap-4"
+            >
+              <div className="w-12 h-12 bg-base-300 rounded-xl"></div>
+              <div className="flex-1 space-y-2">
+                <div className="h-4 w-1/3 bg-base-300 rounded"></div>
+                <div className="h-3 w-1/4 bg-base-300 rounded"></div>
+              </div>
+              <div className="w-20 h-6 bg-base-300 rounded-full"></div>
+              <div className="w-24 h-8 bg-base-300 rounded"></div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
 
   return (
-    <div className="p-6">
-      <h2 className="text-3xl font-bold mb-6 flex items-center gap-2">
+    <motion.div
+      className="p-6"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
+      <motion.h2
+        variants={itemVariants}
+        className="text-3xl font-bold mb-6 flex items-center gap-2"
+      >
         <FaClipboardList /> All Reported Issues
-      </h2>
+      </motion.h2>
 
-      <div className="overflow-x-auto bg-base-100 shadow-xl rounded-lg border border-base-200">
+      <motion.div
+        variants={itemVariants}
+        className="overflow-x-auto bg-base-100 shadow-xl rounded-lg border border-base-200"
+      >
         <table className="table">
           <thead className="bg-base-200">
             <tr>
@@ -121,97 +173,113 @@ const AdminAllIssues = () => {
             </tr>
           </thead>
           <tbody>
-            {issues.map((issue) => (
-              <tr key={issue._id}>
-                <td>
-                  <div className="flex items-center gap-3">
-                    <div className="avatar">
-                      <div className="mask mask-squircle w-12 h-12">
-                        <img src={issue.photo} alt="Issue" />
-                      </div>
-                    </div>
-                    <div>
-                      <div className="font-bold">{issue.title}</div>
-                      <div className="text-sm opacity-50">{issue.category}</div>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <span
-                    className={`badge ${
-                      issue.status === "resolved"
-                        ? "badge-success"
-                        : issue.status === "rejected"
-                        ? "badge-error"
-                        : issue.status === "in-progress"
-                        ? "badge-info"
-                        : "badge-warning"
-                    } capitalize`}
-                  >
-                    {issue.status}
-                  </span>
-                </td>
-                <td>
-                  {issue.priority === "high" ? (
-                    <div className="badge badge-error gap-1 text-white">
-                      <FaArrowUp size={10} /> High
-                    </div>
-                  ) : (
-                    <div className="badge badge-ghost">Normal</div>
-                  )}
-                </td>
-                <td>
-                  {issue.assignedStaff ? (
-                    <div className="flex items-center gap-2">
-                      <div className="avatar placeholder">
-                        <div className="bg-neutral text-neutral-content rounded-full w-8">
-                          <img src={issue.assignedStaff.photo} alt="Staff" />
+            <AnimatePresence>
+              {issues.map((issue) => (
+                <motion.tr
+                  key={issue._id}
+                  variants={itemVariants}
+                  layout
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="hover:bg-base-50/50 transition-colors"
+                >
+                  <td>
+                    <div className="flex items-center gap-3">
+                      <div className="avatar">
+                        <div className="mask mask-squircle w-12 h-12">
+                          <img src={issue.photo} alt="Issue" />
                         </div>
                       </div>
-                      <span className="font-semibold text-sm">
-                        {issue.assignedStaff.name}
-                      </span>
+                      <div>
+                        <div className="font-bold">{issue.title}</div>
+                        <div className="text-sm opacity-50">
+                          {issue.category}
+                        </div>
+                      </div>
                     </div>
-                  ) : (
-                    <span className="text-gray-400 text-sm italic">
-                      Not assigned
+                  </td>
+                  <td>
+                    <span
+                      className={`badge ${
+                        issue.status === "resolved"
+                          ? "badge-success"
+                          : issue.status === "rejected"
+                          ? "badge-error"
+                          : issue.status === "in-progress"
+                          ? "badge-info"
+                          : "badge-warning"
+                      } capitalize`}
+                    >
+                      {issue.status}
                     </span>
-                  )}
-                </td>
-                <th>
-                  <div className="flex gap-2">
-                    {!issue.assignedStaff &&
-                      issue.status !== "rejected" &&
-                      issue.status !== "resolved" && (
-                        <button
-                          onClick={() => openAssignModal(issue)}
-                          className="btn btn-xs btn-primary gap-1"
+                  </td>
+                  <td>
+                    {issue.priority === "high" ? (
+                      <div className="badge badge-error gap-1 text-white">
+                        <FaArrowUp size={10} /> High
+                      </div>
+                    ) : (
+                      <div className="badge badge-ghost">Normal</div>
+                    )}
+                  </td>
+                  <td>
+                    {issue.assignedStaff ? (
+                      <div className="flex items-center gap-2">
+                        <div className="avatar placeholder">
+                          <div className="bg-neutral text-neutral-content rounded-full w-8">
+                            <img src={issue.assignedStaff.photo} alt="Staff" />
+                          </div>
+                        </div>
+                        <span className="font-semibold text-sm">
+                          {issue.assignedStaff.name}
+                        </span>
+                      </div>
+                    ) : (
+                      <span className="text-gray-400 text-sm italic">
+                        Not assigned
+                      </span>
+                    )}
+                  </td>
+                  <th>
+                    <div className="flex gap-2">
+                      {!issue.assignedStaff &&
+                        issue.status !== "rejected" &&
+                        issue.status !== "resolved" && (
+                          <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={() => openAssignModal(issue)}
+                            className="btn btn-xs btn-primary gap-1"
+                          >
+                            <FaUserPlus /> Assign
+                          </motion.button>
+                        )}
+
+                      {issue.status === "pending" && (
+                        <motion.button
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          onClick={() => handleReject(issue._id)}
+                          className="btn btn-xs btn-error btn-outline"
                         >
-                          <FaUserPlus /> Assign
-                        </button>
+                          Reject
+                        </motion.button>
                       )}
 
-                    {issue.status === "pending" && (
-                      <button
-                        onClick={() => handleReject(issue._id)}
-                        className="btn btn-xs btn-error btn-outline"
-                      >
-                        Reject
-                      </button>
-                    )}
-
-                    {issue.assignedStaff && (
-                      <span className="text-success text-xs flex items-center gap-1">
-                        <FaCheckCircle /> Assigned
-                      </span>
-                    )}
-                  </div>
-                </th>
-              </tr>
-            ))}
+                      {issue.assignedStaff && (
+                        <span className="text-success text-xs flex items-center gap-1">
+                          <FaCheckCircle /> Assigned
+                        </span>
+                      )}
+                    </div>
+                  </th>
+                </motion.tr>
+              ))}
+            </AnimatePresence>
           </tbody>
         </table>
-      </div>
+      </motion.div>
 
       <dialog id="assign_modal" className="modal">
         <div className="modal-box">
@@ -253,7 +321,7 @@ const AdminAllIssues = () => {
           </form>
         </div>
       </dialog>
-    </div>
+    </motion.div>
   );
 };
 

@@ -3,7 +3,6 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import Swal from "sweetalert2";
 import { AuthContext } from "../../../Context/AuthContext";
-import Loader from "../../../Components/Shared/Loader";
 import {
   FaTasks,
   FaArrowUp,
@@ -11,6 +10,7 @@ import {
   FaMapMarkerAlt,
 } from "react-icons/fa";
 import { Link } from "react-router";
+import { motion, AnimatePresence } from "framer-motion";
 
 const AssignedIssues = () => {
   const { user } = useContext(AuthContext);
@@ -53,15 +53,90 @@ const AssignedIssues = () => {
     }
   };
 
-  if (isLoading) return <Loader />;
+  // --- Animation Variants ---
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.1 },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, x: -20 },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: { type: "spring", stiffness: 100 },
+    },
+  };
+
+  // --- SKELETON LOADER ---
+  if (isLoading)
+    return (
+      <div className="p-6 space-y-6">
+        <div className="h-10 w-64 bg-base-300 rounded animate-pulse mb-6"></div>
+        <div className="overflow-x-auto bg-base-100 shadow-xl rounded-lg border border-base-200">
+          <table className="table">
+            <thead className="bg-base-200">
+              <tr>
+                <th>Issue Details</th>
+                <th>Priority</th>
+                <th>Current Status</th>
+                <th>Update Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {[...Array(5)].map((_, i) => (
+                <tr key={i} className="animate-pulse border-b border-base-200">
+                  <td>
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 bg-base-300 rounded-xl"></div>
+                      <div className="space-y-2">
+                        <div className="h-4 w-32 bg-base-300 rounded"></div>
+                        <div className="h-3 w-24 bg-base-300 rounded"></div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div className="h-6 w-16 bg-base-300 rounded-full"></div>
+                  </td>
+                  <td>
+                    <div className="h-6 w-20 bg-base-300 rounded-full"></div>
+                  </td>
+                  <td>
+                    <div className="h-8 w-32 bg-base-300 rounded"></div>
+                  </td>
+                  <td>
+                    <div className="h-6 w-24 bg-base-300 rounded"></div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    );
 
   return (
-    <div className="p-6">
-      <h2 className="text-3xl font-bold mb-6 flex items-center gap-2">
+    <motion.div
+      className="p-6"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
+      <motion.h2
+        variants={itemVariants}
+        className="text-3xl font-bold mb-6 flex items-center gap-2"
+      >
         <FaTasks /> My Assigned Tasks
-      </h2>
+      </motion.h2>
 
-      <div className="overflow-x-auto bg-base-100 shadow-xl rounded-lg border border-base-200">
+      <motion.div
+        variants={itemVariants}
+        className="overflow-x-auto bg-base-100 shadow-xl rounded-lg border border-base-200"
+      >
         <table className="table">
           <thead className="bg-base-200">
             <tr>
@@ -73,75 +148,82 @@ const AssignedIssues = () => {
             </tr>
           </thead>
           <tbody>
-            {issues.map((issue) => (
-              <tr
-                key={issue._id}
-                className={issue.priority === "high" ? " " : ""}
-              >
-                <td>
-                  <div className="flex items-center gap-3">
-                    <div className="avatar">
-                      <div className="mask mask-squircle w-12 h-12">
-                        <img src={issue.photo} alt="Issue" />
+            <AnimatePresence>
+              {issues.map((issue) => (
+                <motion.tr
+                  key={issue._id}
+                  variants={itemVariants}
+                  layout
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className={issue.priority === "high" ? " " : ""}
+                >
+                  <td>
+                    <div className="flex items-center gap-3">
+                      <div className="avatar">
+                        <div className="mask mask-squircle w-12 h-12">
+                          <img src={issue.photo} alt="Issue" />
+                        </div>
+                      </div>
+                      <div>
+                        <div className="font-bold">{issue.title}</div>
+                        <div className="text-sm opacity-50 flex items-center gap-1">
+                          <FaMapMarkerAlt /> {issue.location}
+                        </div>
                       </div>
                     </div>
-                    <div>
-                      <div className="font-bold">{issue.title}</div>
-                      <div className="text-sm opacity-50 flex items-center gap-1">
-                        <FaMapMarkerAlt /> {issue.location}
+                  </td>
+                  <td>
+                    {issue.priority === "high" ? (
+                      <div className="badge badge-error text-white gap-1 font-bold animate-pulse">
+                        <FaArrowUp /> High
                       </div>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  {issue.priority === "high" ? (
-                    <div className="badge badge-error text-white gap-1 font-bold animate-pulse">
-                      <FaArrowUp /> High
-                    </div>
-                  ) : (
-                    <div className="badge badge-ghost">Normal</div>
-                  )}
-                </td>
-                <td>
-                  <span
-                    className={`badge ${
-                      issue.status === "resolved"
-                        ? "badge-success"
-                        : issue.status === "closed"
-                        ? "badge-neutral"
-                        : issue.status === "in-progress"
-                        ? "badge-info"
-                        : "badge-warning"
-                    } capitalize font-semibold`}
-                  >
-                    {issue.status}
-                  </span>
-                </td>
-                <td>
-                  <select
-                    className="select select-bordered select-sm w-full max-w-xs focus:select-primary"
-                    defaultValue={issue.status}
-                    onChange={(e) => handleStatusChange(issue._id, e)}
-                    disabled={issue.status === "closed"}
-                  >
-                    <option disabled>Change Status</option>
-                    <option value="pending">Pending</option>
-                    <option value="in-progress">In Progress</option>
-                    <option value="working">Working</option>
-                    <option value="resolved">Resolved</option>
-                    <option value="closed">Closed</option>
-                  </select>
-                </td>
-                <th>
-                  <Link
-                    to={`/issues/${issue._id}`}
-                    className="btn btn-ghost btn-xs"
-                  >
-                    View Details
-                  </Link>
-                </th>
-              </tr>
-            ))}
+                    ) : (
+                      <div className="badge badge-ghost">Normal</div>
+                    )}
+                  </td>
+                  <td>
+                    <span
+                      className={`badge ${
+                        issue.status === "resolved"
+                          ? "badge-success"
+                          : issue.status === "closed"
+                          ? "badge-neutral"
+                          : issue.status === "in-progress"
+                          ? "badge-info"
+                          : "badge-warning"
+                      } capitalize font-semibold`}
+                    >
+                      {issue.status}
+                    </span>
+                  </td>
+                  <td>
+                    <select
+                      className="select select-bordered select-sm w-full max-w-xs focus:select-primary"
+                      defaultValue={issue.status}
+                      onChange={(e) => handleStatusChange(issue._id, e)}
+                      disabled={issue.status === "closed"}
+                    >
+                      <option disabled>Change Status</option>
+                      <option value="pending">Pending</option>
+                      <option value="in-progress">In Progress</option>
+                      <option value="working">Working</option>
+                      <option value="resolved">Resolved</option>
+                      <option value="closed">Closed</option>
+                    </select>
+                  </td>
+                  <th>
+                    <Link
+                      to={`/issues/${issue._id}`}
+                      className="btn btn-ghost btn-xs"
+                    >
+                      View Details
+                    </Link>
+                  </th>
+                </motion.tr>
+              ))}
+            </AnimatePresence>
           </tbody>
         </table>
 
@@ -151,8 +233,8 @@ const AssignedIssues = () => {
             <p>No pending tasks! Great job.</p>
           </div>
         )}
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 };
 

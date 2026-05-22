@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../../Hooks/useAxiosSecure";
-import Loader from "../../../Components/Shared/Loader";
 import { FaFileInvoice, FaMoneyBillWave } from "react-icons/fa";
 import jsPDF from "jspdf";
+import { motion, AnimatePresence } from "framer-motion";
 
 const Payments = () => {
   const [filterType, setFilterType] = useState("all");
@@ -71,15 +71,96 @@ const Payments = () => {
     doc.save(`invoice_${payment.transactionId}.pdf`);
   };
 
-  if (isLoading) return <Loader />;
+  // --- Animation Variants ---
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.05 },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { type: "spring", stiffness: 100 },
+    },
+  };
+
+  // --- SKELETON LOADER ---
+  if (isLoading)
+    return (
+      <div className="p-6 space-y-6">
+        <div className="h-10 w-64 bg-base-300 rounded animate-pulse mb-6"></div>
+        <div className="flex justify-end">
+          <div className="h-12 w-80 bg-base-300 rounded-lg animate-pulse"></div>
+        </div>
+        <div className="overflow-x-auto bg-base-100 shadow-xl rounded-lg border border-base-200">
+          <table className="table">
+            <thead className="bg-base-200">
+              <tr>
+                <th>#</th>
+                <th>User Email</th>
+                <th>Transaction ID</th>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Amount</th>
+                <th>Invoice</th>
+              </tr>
+            </thead>
+            <tbody>
+              {[...Array(6)].map((_, index) => (
+                <tr
+                  key={index}
+                  className="animate-pulse border-b border-base-200"
+                >
+                  <th>
+                    <div className="h-4 w-4 bg-base-300 rounded"></div>
+                  </th>
+                  <td>
+                    <div className="h-4 w-24 bg-base-300 rounded mb-1"></div>
+                    <div className="h-3 w-32 bg-base-300 rounded"></div>
+                  </td>
+                  <td>
+                    <div className="h-4 w-20 bg-base-300 rounded"></div>
+                  </td>
+                  <td>
+                    <div className="h-4 w-24 bg-base-300 rounded"></div>
+                  </td>
+                  <td>
+                    <div className="h-6 w-20 bg-base-300 rounded-full"></div>
+                  </td>
+                  <td>
+                    <div className="h-4 w-16 bg-base-300 rounded"></div>
+                  </td>
+                  <td>
+                    <div className="h-8 w-20 bg-base-300 rounded"></div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    );
 
   return (
-    <div className="p-6">
-      <h2 className="text-3xl font-bold mb-6 flex items-center gap-2">
+    <motion.div
+      className="p-6"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
+      <motion.h2
+        variants={itemVariants}
+        className="text-3xl font-bold mb-6 flex items-center gap-2"
+      >
         <FaMoneyBillWave className="text-success" /> Payment History
-      </h2>
+      </motion.h2>
 
-      <div className="flex justify-end mb-4">
+      <motion.div variants={itemVariants} className="flex justify-end mb-4">
         <div className="join">
           <button
             className={`btn join-item ${
@@ -106,9 +187,12 @@ const Payments = () => {
             Boosts
           </button>
         </div>
-      </div>
+      </motion.div>
 
-      <div className="overflow-x-auto bg-base-100 shadow-xl rounded-lg border border-base-200">
+      <motion.div
+        variants={itemVariants}
+        className="overflow-x-auto bg-base-100 shadow-xl rounded-lg border border-base-200"
+      >
         <table className="table">
           <thead className="bg-base-200">
             <tr>
@@ -122,38 +206,50 @@ const Payments = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredPayments.map((pay, index) => (
-              <tr key={pay._id}>
-                <th>{index + 1}</th>
-                <td>
-                  <div className="font-bold">{pay.name}</div>
-                  <div className="text-xs opacity-50">{pay.email}</div>
-                </td>
-                <td className="font-mono text-xs">{pay.transactionId}</td>
-                <td>{new Date(pay.date).toLocaleDateString()}</td>
-                <td>
-                  <span
-                    className={`badge ${
-                      pay.type === "subscription"
-                        ? "badge-warning"
-                        : "badge-info"
-                    } uppercase text-xs font-bold`}
-                  >
-                    {pay.type}
-                  </span>
-                </td>
-                <td className="font-bold text-success">{pay.price} Tk</td>
-                <td>
-                  <button
-                    onClick={() => handleDownloadInvoice(pay)}
-                    className="btn btn-sm btn-ghost gap-2 text-gray-600 hover:text-primary"
-                  >
-                    <FaFileInvoice />{" "}
-                    <span className="hidden md:inline">PDF</span>
-                  </button>
-                </td>
-              </tr>
-            ))}
+            <AnimatePresence mode="popLayout">
+              {filteredPayments.map((pay, index) => (
+                <motion.tr
+                  key={pay._id}
+                  variants={itemVariants}
+                  layout
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  className="hover:bg-base-50 transition-colors"
+                >
+                  <th>{index + 1}</th>
+                  <td>
+                    <div className="font-bold">{pay.name}</div>
+                    <div className="text-xs opacity-50">{pay.email}</div>
+                  </td>
+                  <td className="font-mono text-xs">{pay.transactionId}</td>
+                  <td>{new Date(pay.date).toLocaleDateString()}</td>
+                  <td>
+                    <span
+                      className={`badge ${
+                        pay.type === "subscription"
+                          ? "badge-warning"
+                          : "badge-info"
+                      } uppercase text-xs font-bold`}
+                    >
+                      {pay.type}
+                    </span>
+                  </td>
+                  <td className="font-bold text-success">{pay.price} Tk</td>
+                  <td>
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => handleDownloadInvoice(pay)}
+                      className="btn btn-sm btn-ghost gap-2 text-gray-600 hover:text-primary"
+                    >
+                      <FaFileInvoice />{" "}
+                      <span className="hidden md:inline">PDF</span>
+                    </motion.button>
+                  </td>
+                </motion.tr>
+              ))}
+            </AnimatePresence>
           </tbody>
         </table>
 
@@ -162,8 +258,8 @@ const Payments = () => {
             No payments found for this category.
           </div>
         )}
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 };
 
