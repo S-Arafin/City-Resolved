@@ -65,7 +65,7 @@ const Login = () => {
 
   // User Demo
   const handleUserDemo = () => {
-    performLogin("arafin@gmail.com", "123456");
+    performLogin("sul@tan.com", "123456");
   };
 
   const handleGoogleLogin = async () => {
@@ -76,6 +76,7 @@ const Login = () => {
         name: user.displayName,
         email: user.email,
         photo: user.photoURL,
+        role: "citizen"
       };
       await axios.post("https://city-resolved-backend.vercel.app/users", userInfo);
       Swal.fire({
